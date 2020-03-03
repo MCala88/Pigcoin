@@ -12,6 +12,7 @@ public class Wallet {
 	private double balance = 0d;
 	private double inputTransactions = 0d;
 	private double outputTransactions = 0d;
+	
 	public PublicKey getAddress() {
 		return address;
 	}

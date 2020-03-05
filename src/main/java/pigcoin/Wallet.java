@@ -5,6 +5,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Wallet {
 	private PublicKey address = null;
@@ -24,7 +25,7 @@ public class Wallet {
 	public PrivateKey getsKey() {
 		return sKey;
 	}
-	public void setsKey(PrivateKey sKey) {
+	public void setSK(PrivateKey sKey) {
 		this.sKey = sKey;
 	}
 	public double getTotal_input() {
@@ -61,15 +62,15 @@ public class Wallet {
 	public void generateKeyPair() {
 		KeyPair pair = GenSig.generateKeyPair();
 		this.setAddress(pair.getPublic());
-		this.setsKey(pair.getPrivate());
+		this.setSK(pair.getPrivate());
 	}
 	
 	public void loadInputTransactions(BlockChain bChain) {
-		bChain.getBlockChain().stream().filter(transaction->transaction.getpKey_recipient().equals(getAddress())).forEachOrdered(transaction->{this.inputTransactions.add(transaction);});	
+		bChain.getBlockChain().stream().filter(transaction->transaction.getpKey_recipient().equals(getAddress())).forEachOrdered(transaction->{inputTransactions.add(transaction);});	
 	}
 	
 	public void loadOutputTransactions(BlockChain bChain) {
-		bChain.getBlockChain().stream().filter(transaction->transaction.getpKey_sender().equals(getAddress())).forEachOrdered(transaction->{this.outputTransactions.add(transaction);});	
+		bChain.getBlockChain().stream().filter(transaction->transaction.getpKey_sender().equals(getAddress())).forEachOrdered(transaction->{outputTransactions.add(transaction);});	
 	}
 	
 	public byte[] signTransaction(String message)  {
@@ -78,6 +79,20 @@ public class Wallet {
 	
 	public String toString() {
 		return "wallet: " + "\n" + "Total input: " + total_input + "Total output: " + total_output + "\n" + "Balances: " + balance;
+	}
+	
+	
+	public void loadCoins(BlockChain bChain) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void sendCoins(PublicKey address2, double d, String string, BlockChain bChain) {
+		// TODO Auto-generated method stub
+		
+	}
+	public Map<String, Double> collectCoins(Double pigcoins) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 		
 }

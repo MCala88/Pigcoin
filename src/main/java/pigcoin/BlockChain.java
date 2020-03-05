@@ -15,4 +15,14 @@ public class BlockChain {
 		
 	}
 
+	public void summarize() {
+		this.blockChain.forEach(transaction->{System.out.println(transaction.toString());});
+		
+	}
+
+	public void summarize(Integer position) {
+		System.out.println(blockChain.get(position).toString());
+		
+	}
+
 }

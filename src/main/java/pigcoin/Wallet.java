@@ -3,6 +3,8 @@ package pigcoin;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Wallet {
 	private PublicKey address = null;
@@ -10,8 +12,8 @@ public class Wallet {
 	private double total_input = 0d;
 	private double total_output = 0d;
 	private double balance = 0d;
-	private double inputTransactions = 0d;
-	private double outputTransactions = 0d;
+	private List<Transaction> inputTransactions = new ArrayList<>();
+	private List<Transaction> outputTransactions = new ArrayList<>();
 	
 	public PublicKey getAddress() {
 		return address;
@@ -43,16 +45,16 @@ public class Wallet {
 	public void setBalance(double balance) {
 		this.balance = balance;
 	}
-	public double getInputTransactions() {
+	public List<Transaction> getInputTransactions() {
 		return inputTransactions;
 	}
-	public void setInputTransactions(double inputTransactions) {
+	public void setInputTransactions(List<Transaction> inputTransactions) {
 		this.inputTransactions = inputTransactions;
 	}
-	public double getOutputTransactions() {
+	public List<Transaction> getOutputTransactions() {
 		return outputTransactions;
 	}
-	public void setOutputTransactions(double outputTransactions) {
+	public void setOutputTransactions(List<Transaction> outputTransactions) {
 		this.outputTransactions = outputTransactions;
 	}
 	
@@ -62,6 +64,17 @@ public class Wallet {
 		this.setsKey(pair.getPrivate());
 	}
 	
+	public void loadInputTransactions(BlockChain bChain) {
+		bChain.getBlockChain().stream().filter(transaction->transaction.getpKey_recipient().equals(getAddress())).forEachOrdered(transaction->{this.inputTransactions.add(transaction);});	
+	}
+	
+	public void loadOutputTransactions(BlockChain bChain) {
+		bChain.getBlockChain().stream().filter(transaction->transaction.getpKey_sender().equals(getAddress())).forEachOrdered(transaction->{this.outputTransactions.add(transaction);});	
+	}
+	
+	public byte[] signTransaction(String message)  {
+		return GenSig.sign(getsKey(), message);
+	}
 	
 	public String toString() {
 		return "wallet: " + "\n" + "Total input: " + total_input + "Total output: " + total_output + "\n" + "Balances: " + balance;

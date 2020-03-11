@@ -87,4 +87,52 @@ public class WalletTest {
 		assertEquals(20, wallet2.getBalance(), 0);
 	
 	}
+	
+	@Test
+	public void sendCoins_test() {
+		Wallet wallet1 = new Wallet();
+		wallet1.generateKeyPair();
+		Wallet wallet2 = new Wallet();
+		wallet2.generateKeyPair();
+		Wallet wallet3 = new Wallet();
+		wallet3.generateKeyPair();
+		 
+		BlockChain bChain = new BlockChain();
+		Transaction trx = new Transaction("hash_1", "0", wallet1.getAddress(), wallet2.getAddress(), 20, "uep");
+		bChain.addOrigin(trx);
+		trx = new Transaction("hash_2", "1", wallet1.getAddress(), wallet3.getAddress(), 50, "com va");
+		bChain.addOrigin(trx);
+		
+        wallet2.loadCoins(bChain);
+        assertEquals(20, wallet2.getTotalInput(), 0);
+        assertEquals(0, wallet2.getTotalOutput(), 0);
+        assertEquals(20, wallet2.getBalance(), 0);
+        wallet2.loadInputTransactions(bChain);
+        assertTrue(wallet2.getInputTransactions().size() == 1);
+
+        wallet3.loadCoins(bChain);
+        assertEquals(50, wallet3.getTotalInput(), 0);
+        assertEquals(0, wallet3.getTotalOutput(), 0);
+        assertEquals(50, wallet3.getBalance(), 0);
+        wallet3.loadInputTransactions(bChain);
+        assertTrue(wallet3.getInputTransactions().size() == 1);
+			
+		wallet2.sendCoins(wallet3.getAddress(), 10.3d, "klk", bChain);
+		assertEquals(4, bChain.getBlockChain().size(), 0);
+		
+		wallet2.loadInputTransactions(bChain);
+		assertEquals(2, wallet2.getInputTransactions().size());
+		assertEquals(20d, wallet2.getInputTransactions().get(0).getPigcoin(), 0);
+	    assertEquals(9.7d, wallet2.getInputTransactions().get(1).getPigcoin(), 0);		
+	
+	    wallet2.loadOutputTransactions(bChain);
+	    assertEquals(2, wallet2.getOutputTransactions().size());
+	    assertEquals(10.3d, wallet2.getOutputTransactions().get(0).getPigcoin(), 0);
+	    assertEquals(9.7d, wallet2.getOutputTransactions().get(1).getPigcoin(), 0);
+	 
+	    wallet2.loadCoins(bChain);
+	    assertEquals(9.7, wallet2.getBalance(), 0);
+        wallet3.loadCoins(bChain);
+        assertEquals(60.3, wallet3.getBalance(), 0);     
+	}
 }

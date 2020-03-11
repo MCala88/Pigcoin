@@ -18,76 +18,76 @@ public class Wallet {
 	private double balance = 0d;
 	private List<Transaction> inputTransactions = new ArrayList<>();
 	private List<Transaction> outputTransactions = new ArrayList<>();
-	private List<Transaction> loadCoins = new ArrayList<>();
 	
-	public PublicKey getAddress() {
+	PublicKey getAddress() {
 		return address;
 	}
-	public void setAddress(PublicKey address) {
+	void setAddress(PublicKey address) {
 		this.address = address;
 	}
-	public PrivateKey getsKey() {
+	PrivateKey getsKey() {
 		return sKey;
 	}
-	public void setSK(PrivateKey sKey) {
+	void setSK(PrivateKey sKey) {
 		this.sKey = sKey;
 	}
-	public double getTotalInput() {
+	double getTotalInput() {
 		return total_input;
 	}
-	public void setTotalInput(double total_input) {
+	private void setTotalInput(double total_input) {
 		this.total_input = total_input;
 	}
-	public double getTotalOutput() {
+	double getTotalOutput() {
 		return total_output;
 	}
-	public void setTotalOutput(double total_output) {
+	private void setTotalOutput(double total_output) {
 		this.total_output = total_output;
 	}
-	public double getBalance() {
+	double getBalance() {
 		return balance;
 	}
-	public void setBalance(double balance) {
+	void setBalance(double balance) {
 		this.balance = balance;
 	}
-	public List<Transaction> getInputTransactions() {
+	List<Transaction> getInputTransactions() {
 		return inputTransactions;
 	}
-	public void setInputTransactions(List<Transaction> inputTransactions) {
+	private void setInputTransactions(List<Transaction> inputTransactions) {
 		this.inputTransactions = inputTransactions;
 	}
-	public List<Transaction> getOutputTransactions() {
+	List<Transaction> getOutputTransactions() {
 		return outputTransactions;
 	}
-	public void setOutputTransactions(List<Transaction> outputTransactions) {
+	private void setOutputTransactions(List<Transaction> outputTransactions) {
 		this.outputTransactions = outputTransactions;
 	}
 	
 	
-	public void generateKeyPair() {
+	void generateKeyPair() {
 		KeyPair pair = GenSig.generateKeyPair();
 		this.setAddress(pair.getPublic());
 		this.setSK(pair.getPrivate());
 	}
 	
-	public void loadInputTransactions(BlockChain bChain) {
-		setInputTransactions(bChain.loadInputTransaction(getAddress()));
-	}
 	
-	public void loadOutputTransactions(BlockChain bChain) {
-		setOutputTransactions(bChain.loadOutputTransaction(getAddress()));	
-	}
-	
-	public byte[] signTransaction(String message)  {
+	byte[] signTransaction(String message)  {
 		return GenSig.sign(getsKey(), message);
 	}
 
 	
-    public void updateBalance() {
+	void loadInputTransactions(BlockChain bChain) {
+		setInputTransactions(bChain.loadInputTransaction(getAddress()));
+	}
+	
+	void loadOutputTransactions(BlockChain bChain) {
+		setOutputTransactions(bChain.loadOutputTransaction(getAddress()));	
+	}
+	
+    void updateBalance() {
 		this.balance = this.getTotalInput() - this.getTotalOutput();
     }
 	
-	public void loadCoins(BlockChain bChain) {
+	void loadCoins(BlockChain bChain) {
 		double[] pigcoins = {0d, 0d};
 		pigcoins = bChain.loadWallet(getAddress());
 		setTotalInput(pigcoins[0]);
@@ -97,8 +97,7 @@ public class Wallet {
 	}
 		
 		
-	public void sendCoins(PublicKey pKey_recipient, double coins, String message, BlockChain bChain) {
-		
+	void sendCoins(PublicKey pKey_recipient, double coins, String message, BlockChain bChain) {
 		Map<String, Double> consumedCoins = new LinkedHashMap<>();
 		
 		consumedCoins = collectCoins(coins);
@@ -107,16 +106,16 @@ public class Wallet {
 			bChain.processTransactions(getAddress(), pKey_recipient, consumedCoins, message, signTransaction(message));
 		}
 	}
-	
 	/* Metodo mayoritariamente no original */
-	public Map<String, Double> collectCoins(Double pigcoins) {
+	Map<String, Double> collectCoins(Double pigcoins) {
 		Map<String, Double> collectedCoins = new LinkedHashMap<>();
 		
-		if (getInputTransactions() == null||pigcoins > getBalance()) {
+        if (getInputTransactions() == null||pigcoins > getBalance()) {
+      
+            return null;
+        }
 			
-		return null;
-		}
-		
+	
 		Double coinsGuardadas = 0d;
 		
 		Set<String> consumedCoins = new HashSet<>();

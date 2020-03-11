@@ -4,53 +4,52 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class BlockChain {
 	private final List<Transaction> blockChain= new ArrayList<>();
 
-	public List<Transaction> getBlockChain() {
+	List<Transaction> getBlockChain() {
 		return this.blockChain;
 	}
 	
-	public void addOrigin(Transaction transaccion) {
+	void addOrigin(Transaction transaccion) {
 		blockChain.add(transaccion);
 		
 	}
 
-	public void summarize() {
-		this.blockChain.forEach(transaction->{System.out.println(transaction.toString());});		
-	}
+    void summarize(){
+    	this.blockChain.forEach(transaction->{System.out.println(transaction.toString());});
+    }
 
-	public void summarize(Integer position) {
-		System.out.println(blockChain.get(position).toString());		
-	}
+    void summarize(int posicion) {
+        System.out.println(getBlockChain().get(posicion).toString());
+    }
 
-    public List<Transaction> loadInputTransaction(PublicKey address) {
+    List<Transaction> loadInputTransaction(PublicKey address) {
         List<Transaction> inputTransactions = getBlockChain().stream()
                 .filter((transacciones) -> (transacciones.getpKey_recipient().equals(address)))
                 .collect(Collectors.toCollection(ArrayList<Transaction>::new));
         return inputTransactions;
     }
 
-    public List<Transaction> loadOutputTransaction(PublicKey address) {
+    List<Transaction> loadOutputTransaction(PublicKey address) {
         List<Transaction> outputTransactions = getBlockChain().stream()
                 .filter((transacciones) -> (transacciones.getpKey_sender().equals(address)))
                 .collect(Collectors.toCollection(ArrayList<Transaction>::new));
         return outputTransactions;
     }
     
-    public double[] loadWallet(PublicKey address) {
+    double[] loadWallet(PublicKey address) {
     	double pigcoinsIn = 0d;
     	double pigcoinsOut = 0d;
     	
     	for (Transaction transaction : getBlockChain()) {
     		if (address.equals(transaction.getpKey_recipient())) {
-    			pigcoinsIn = pigcoinsIn + transaction.getPigcoin();
+    			pigcoinsIn += transaction.getPigcoin();
     		}
     		if (address.equals(transaction.getpKey_sender())) {
-    			pigcoinsOut = pigcoinsOut + transaction.getPigcoin();
+    			pigcoinsOut += transaction.getPigcoin();
     		}
     		
     	}
@@ -58,11 +57,11 @@ public class BlockChain {
     	return pigcoins;
     }
 
-    public boolean isSignatureValid(PublicKey pKey_sender, String message, byte[] signedTransaction) {
+    boolean isSignatureValid(PublicKey pKey_sender, String message, byte[] signedTransaction) {
     	return GenSig.verify(pKey_sender, message, signedTransaction);
     }
     
-    public boolean isConsumedCoinValid(Map<String, Double> consumedCoins) {
+    boolean isConsumedCoinValid(Map<String, Double> consumedCoins) {
     	for (String hash :consumedCoins.keySet()) {
     		for (Transaction transaction : blockChain) {
     			if (hash.equals(transaction.getPrev_hash())) {
@@ -74,7 +73,7 @@ public class BlockChain {
     }
     
     /* Codigo no original */
-    public void createTransaction(PublicKey pKey_sender, PublicKey pKey_recipient, Map<String, Double> consumedCoins, String message, byte[] signedTransaction) {
+    void createTransaction(PublicKey pKey_sender, PublicKey pKey_recipient, Map<String, Double> consumedCoins, String message, byte[] signedTransaction) {
     
     	PublicKey address_recipient = pKey_recipient;
         Integer lastBlock = 0;
@@ -93,10 +92,13 @@ public class BlockChain {
         }
     }
     
-    public void processTransactions(PublicKey pKey_sender, PublicKey pKey_recipient, Map<String, Double> consumedCoins, String message, byte[] signedTransaction) {
-    
-    	if (isSignatureValid(pKey_recipient, message, signedTransaction) && isConsumedCoinValid(consumedCoins)) {
-    		createTransaction(pKey_recipient, pKey_recipient, consumedCoins, message, signedTransaction);
-    	}
+    void processTransactions(PublicKey pKey_sender, PublicKey pKey_recipient, Map<String, Double> consumedCoins,
+            String message, byte[] signedTransaction) {
+        
+        if (isSignatureValid(pKey_sender, message, signedTransaction) && isConsumedCoinValid(consumedCoins)) {
+            // crear las nuevas transacciones y añadirlas al blockchain
+            createTransaction(pKey_sender, pKey_recipient, consumedCoins, message, signedTransaction);
+        }
+
     }
 }

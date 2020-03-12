@@ -1,54 +1,6 @@
 PIGCOIN
 =======
 
-> Vamos a construir un prototipo de nuestra criptomoneda Pigcoin que permite gestionar mediante un blockchain la transferencia de monedas entre el alumnado y profesorado propietarios/as de wallets (o monederos).
-
-* La cadena de bloques o _blockchain_ está compuesta por las transacciones que envían las _wallet_ o monederos entre sí, una detrás de otra. Cada entrada en el _blockchain_ es una transacción.
-* Una _wallet_ es un monedero. Se identifica por su par clave privada y clave pública. Pertenece al usuario/a que conoce su clave privada. La clave pública es la dirección de la _wallet_ a la que se envían (o donde se reciben) los pigcoins.
-* Cuando un usuario/a envía pigcoins, los envía a la dirección o clave pública de la _wallet_ de destino. Firma la transacción con su clave privada.
-* El _blockchain_ debe verificar que una transacción es auténtica antes de añadirla a la cadena de bloques. Verifica la firma de la transacción mediante la clave pública de la wallet que envía los pigcoins.
-* El _blockchain_ debe verificar que los pigcoins de la transacción no han sido gastados antes, es decir, que no existen en el _blockchain_ transacciones que utilicen los pigcoins que se pretenden usar ahora. 
-* Una transacción es como un billete de pigcoins. Para gastarlo, ese billete debe habértelo entregado alguien y no puedes haberlo gastado antes. Cuando envías pigcoins, utilizas la transacción en la que los recibiste y dicha transacción NO puede volverse a utilizar (se destruye esa moneda). **Cada transacción sólo puede ser utilizada una vez. En el _blockchain_ no puede haber dos transacciones que provengan de la misma transacción**.
-* Los pigcoins son transacciones indivisibles. Si quieres enviar 8 _pgc_ (pigcoins) y sólo dispones de un billete /transacción recibida de 10 _pgc_, debes enviar dos transacciones: una de 8 _pgc_ para el destinatario/a y 2 _pgc_ para tí mismo/a. A esto se la llama _change address_.
-
-## Prepara el proyecto
-
- 1. Crea un nuevo repo en tu cuenta en **Github**.
- 2. Crea un nuevo directorio en tu equipo y **clona el repositorio** de Github.
- 3. Abre VSCode /Eclipse /Netbeans y **establece como workspace** el directorio que has clonado.
- 4. Crea un proyecto **Maven** que incluya tu **nombre y apellidos**.
- 5. Pon el proyecto en seguimiento en **Git** y configura `.gitignore`.
- 5. Copia y pega la función principal `App.java`. Utilízala como guía en el proceso TDD. **No puedes modificar su código**, pero sí puedes comentar aquellas partes que aun no hayas implementado.
- 6. Añade al proyecto la clase `GenSig.java` que ofrece varias utilidades que emplearás.
- 7. Completa las clases que aquí se indican **implementando los casos test que necesites**. Practica **TDD**.
- 8. Realiza `commits` como mínimo cada vez que termines una historia de usuario. 
-
-## Cómo entregar el código
-
- 1. Desde Eclipse exporta el proyecto a un fichero.
- 2. En VSCode, comprime la carpeta del proyecto.
- 3. Envíame el archivo por correo electrónico.
- 4. **Realiza commits periódicamente** mientras avanzas en el desarrollo de la aplicación.
- 5. Realiza un `push` al repo remoto en GitHub **SOLO cuando hayas terminado el proyecto**.
-
-## Salida de la aplicación
-
-Intenta que la salida del programa sea lo más parecida posible a la imagen que se proporciona.
-
-## Historias de usuario
-
-Las hitorias de usuario están enunciadas en el script principal `App.java`
-
-Crea un documento donde escribas las historias de usuario correspondientes a los hitos del proceso.
-
-![01 Monty Python pig](http://78.media.tumblr.com/tumblr_mej14zLYde1qe1l45o1_500.gif)
-
-## Diagrama de clases UML
-
-Realiza a mano alzada -o con la aplicación que prefieras- un pequeño diagrama de clases UML que muestre la relación entre las clases que has construido, con su interfaz pública y privada.
-
-## Código
-
 ### Clase `Transaction`
 
 Una **transacción** es una transferencia de pigcoins entre dos **wallets**.
